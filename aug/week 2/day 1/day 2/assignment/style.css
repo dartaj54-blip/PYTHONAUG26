@@ -1,0 +1,77 @@
+body {
+    font-family: Arial;
+    margin: 0;
+}
+
+
+/* First Part */
+
+.first {
+    padding: 20px;
+}
+
+.top {
+    font-size: 28px;
+    color: red;
+}
+
+.green {
+    color: green;
+    text-decoration: underline;
+}
+
+.first p {
+    font-size: 20px;
+    line-height: 1.5;
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th {
+    text-align: left;
+    padding: 8px;
+}
+
+td {
+    padding: 8px;
+    width: 100px;
+}
+
+tr:nth-child(even) {
+    background-color: #333;
+    color: white;
+}
+
+
+/* Second Part */
+
+.second {
+    background-color: #f3f1f8;
+    padding: 10px 70px;
+}
+
+.second h1 {
+    color: orangered;
+    font-size: 38px;
+}
+
+.second p {
+    color: #28234d;
+    font-size: 34px;
+    margin: 5px;
+}
+
+.second h2 {
+    color: royalblue;
+    font-size: 36px;
+    margin: 5px;
+}
+
+.second h3 {
+    color: blueviolet;
+    font-size: 34px;
+    margin: 5px;
+}
