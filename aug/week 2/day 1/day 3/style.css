@@ -1,0 +1,19 @@
+p{
+    background-color: red;
+    border: 5px solid blue;
+}
+.box{
+    width: 150px;
+    background-color: blue;
+    border: 10px solid red;
+    padding: 20px 30px;
+    margin: 20px 30px 40px 30px;
+}
+.img{
+    width: 300;
+    height: 300;
+    border: 1px solid black;
+    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIay_AVuLLJX1-232tGPZJIz7epXtEMKtJGxnIFg2rZg&s=10
+    );
+    background-size: cover;
+}
