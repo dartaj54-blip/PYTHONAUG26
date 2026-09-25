@@ -3,10 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Student Registration</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-<script src="script.js"></script>    
+
+    <div class="container">
+        <h1>Student Registration</h1>
+
+        <form id="registerForm">
+
+            <input type="text" id="name" placeholder="Enter your name">
+
+            <input type="email" id="email" placeholder="Enter your email">
+
+            <input type="number" id="phone" placeholder="Enter your phone">
+
+            <div class="gender">
+                <label>Gender</label>
+                <input type="radio" name="gender" value="Male"> Male
+                <input type="radio" name="gender" value="Female"> Female
+            </div>
+
+            <select id="course">
+                <option value="">Select Course</option>
+                <option value="Python">Python</option>
+                <option value="JavaScript">JavaScript</option>
+                <option value="Web Development">Web Development</option>
+            </select>
+
+            <input type="password" id="password" placeholder="Enter password">
+
+            <input type="password" id="confirmPassword" placeholder="Confirm password">
+
+            <button type="submit">Register</button>
+
+            <p id="message"></p>
+
+        </form>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
