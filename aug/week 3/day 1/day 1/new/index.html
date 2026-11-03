@@ -1,48 +1,2537 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration</title>
-    <link rel="stylesheet" href="style.css">
+
+    <title>FITX PRO — Fitness Dashboard</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+        }
+
+        .glass {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg,#a3e635,#22c55e);
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .sidebar-item {
+            transition: 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(163,230,53,0.1);
+            color: #a3e635;
+        }
+
+        .sidebar-active {
+            background: rgba(163,230,53,0.15);
+            color: #a3e635;
+        }
+
+        .modal {
+            animation: modalIn .25s ease;
+        }
+
+        @keyframes modalIn {
+
+            from {
+                opacity: 0;
+                transform: scale(.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .mobile-nav {
+            box-shadow: 0 -10px 40px rgba(0,0,0,.4);
+        }
+
+    </style>
+
 </head>
-<body>
 
-    <div class="container">
-        <h1>Student Registration</h1>
 
-        <form id="registerForm">
+<body class="bg-[#070707] text-white">
 
-            <input type="text" id="name" placeholder="Enter your name">
 
-            <input type="email" id="email" placeholder="Enter your email">
+    <!-- =====================================================
+                         MOBILE HEADER
+    ====================================================== -->
 
-            <input type="number" id="phone" placeholder="Enter your phone">
+    <header class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10">
 
-            <div class="gender">
-                <label>Gender</label>
-                <input type="radio" name="gender" value="Male"> Male
-                <input type="radio" name="gender" value="Female"> Female
+        <div class="px-5 py-4 flex items-center justify-between">
+
+            <div class="text-2xl font-black">
+                FIT<span class="text-lime-400">X</span>
             </div>
 
-            <select id="course">
-                <option value="">Select Course</option>
-                <option value="Python">Python</option>
-                <option value="JavaScript">JavaScript</option>
-                <option value="Web Development">Web Development</option>
-            </select>
+            <button onclick="openMobileMenu()" class="text-2xl">
+                ☰
+            </button>
 
-            <input type="password" id="password" placeholder="Enter password">
+        </div>
 
-            <input type="password" id="confirmPassword" placeholder="Confirm password">
+    </header>
 
-            <button type="submit">Register</button>
 
-            <p id="message"></p>
 
-        </form>
+    <!-- =====================================================
+                         SIDEBAR
+    ====================================================== -->
+
+    <aside id="sidebar"
+        class="fixed left-0 top-0 bottom-0 w-64 bg-[#0c0c0c] border-r border-white/10 z-50 hidden lg:flex flex-col">
+
+        <!-- Logo -->
+
+        <div class="px-7 py-7 border-b border-white/10">
+
+            <div class="text-3xl font-black">
+                FIT<span class="text-lime-400">X</span>
+            </div>
+
+            <p class="text-xs text-gray-500 mt-1 tracking-[3px]">
+                PERFORMANCE
+            </p>
+
+        </div>
+
+
+        <!-- Navigation -->
+
+        <nav class="flex-1 p-4 space-y-2">
+
+            <button onclick="showPage('dashboard')"
+                class="sidebar-item sidebar-active w-full text-left px-4 py-3 rounded-xl flex gap-3 items-center"
+                id="nav-dashboard">
+
+                <span>⌂</span>
+                Dashboard
+
+            </button>
+
+
+            <button onclick="showPage('workouts')"
+                class="sidebar-item w-full text-left px-4 py-3 rounded-xl flex gap-3 items-center"
+                id="nav-workouts">
+
+                <span>⚡</span>
+                Workouts
+
+            </button>
+
+
+            <button onclick="showPage('progress')"
+                class="sidebar-item w-full text-left px-4 py-3 rounded-xl flex gap-3 items-center"
+                id="nav-progress">
+
+                <span>📈</span>
+                Progress
+
+            </button>
+
+
+            <button onclick="showPage('nutrition')"
+                class="sidebar-item w-full text-left px-4 py-3 rounded-xl flex gap-3 items-center"
+                id="nav-nutrition">
+
+                <span>🥗</span>
+                Nutrition
+
+            </button>
+
+
+            <button onclick="showPage('tools')"
+                class="sidebar-item w-full text-left px-4 py-3 rounded-xl flex gap-3 items-center"
+                id="nav-tools">
+
+                <span>🧮</span>
+                Fitness Tools
+
+            </button>
+
+
+            <button onclick="showPage('achievements')"
+                class="sidebar-item w-full text-left px-4 py-3 rounded-xl flex gap-3 items-center"
+                id="nav-achievements">
+
+                <span>🏆</span>
+                Achievements
+
+            </button>
+
+        </nav>
+
+
+        <!-- User -->
+
+        <div class="p-4 border-t border-white/10">
+
+            <div class="flex items-center gap-3 p-3">
+
+                <div
+                    class="w-10 h-10 rounded-full bg-lime-400 text-black flex items-center justify-center font-black">
+
+                    JD
+
+                </div>
+
+                <div>
+
+                    <p class="font-bold text-sm">
+                        John Doe
+                    </p>
+
+                    <p class="text-xs text-gray-500">
+                        Pro Member
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+                         MOBILE MENU
+    ====================================================== -->
+
+    <div id="mobileMenu"
+        class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]">
+
+        <div class="w-72 h-full bg-[#0c0c0c] p-6">
+
+            <div class="flex justify-between items-center mb-10">
+
+                <div class="text-2xl font-black">
+                    FIT<span class="text-lime-400">X</span>
+                </div>
+
+                <button onclick="closeMobileMenu()" class="text-xl">
+                    ✕
+                </button>
+
+            </div>
+
+
+            <div class="space-y-3">
+
+                <button onclick="mobilePage('dashboard')"
+                    class="w-full text-left p-4 rounded-xl hover:bg-white/5">
+                    🏠 Dashboard
+                </button>
+
+                <button onclick="mobilePage('workouts')"
+                    class="w-full text-left p-4 rounded-xl hover:bg-white/5">
+                    ⚡ Workouts
+                </button>
+
+                <button onclick="mobilePage('progress')"
+                    class="w-full text-left p-4 rounded-xl hover:bg-white/5">
+                    📈 Progress
+                </button>
+
+                <button onclick="mobilePage('nutrition')"
+                    class="w-full text-left p-4 rounded-xl hover:bg-white/5">
+                    🥗 Nutrition
+                </button>
+
+                <button onclick="mobilePage('tools')"
+                    class="w-full text-left p-4 rounded-xl hover:bg-white/5">
+                    🧮 Tools
+                </button>
+
+                <button onclick="mobilePage('achievements')"
+                    class="w-full text-left p-4 rounded-xl hover:bg-white/5">
+                    🏆 Achievements
+                </button>
+
+            </div>
+
+        </div>
+
     </div>
 
-    <script src="script.js"></script>
+
+
+    <!-- =====================================================
+                         MAIN
+    ====================================================== -->
+
+    <main class="lg:ml-64 min-h-screen pt-20 lg:pt-0">
+
+
+        <!-- =================================================
+                         TOP BAR
+        ================================================== -->
+
+        <div class="hidden lg:flex h-20 border-b border-white/10 items-center justify-between px-8">
+
+            <div>
+
+                <p class="text-gray-500 text-sm">
+                    Thursday, October 8
+                </p>
+
+                <h2 class="font-bold">
+                    Good evening, John 👋
+                </h2>
+
+            </div>
+
+
+            <div class="flex items-center gap-5">
+
+                <button onclick="showToast('No new notifications')"
+                    class="w-11 h-11 rounded-xl glass relative">
+
+                    🔔
+
+                    <span
+                        class="absolute top-2 right-2 w-2 h-2 bg-lime-400 rounded-full">
+                    </span>
+
+                </button>
+
+
+                <button onclick="toggleTheme()"
+                    class="w-11 h-11 rounded-xl glass">
+
+                    ☀️
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+                         PAGE CONTAINER
+        ================================================== -->
+
+        <div class="p-5 md:p-8 max-w-[1600px] mx-auto">
+
+
+            <!-- =================================================
+                             DASHBOARD PAGE
+            ================================================== -->
+
+            <section id="page-dashboard" class="page">
+
+
+                <!-- Header -->
+
+                <div class="mb-8">
+
+                    <p class="text-lime-400 uppercase tracking-[3px] text-sm font-bold">
+                        Your Dashboard
+                    </p>
+
+                    <h1 class="text-4xl md:text-5xl font-black mt-2">
+                        Build Your <span class="gradient-text">Best Self.</span>
+                    </h1>
+
+                </div>
+
+
+
+                <!-- Stats -->
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+
+
+                    <div class="glass rounded-2xl p-5">
+
+                        <div class="flex justify-between">
+
+                            <span class="text-gray-400">
+                                Workouts
+                            </span>
+
+                            <span>
+                                ⚡
+                            </span>
+
+                        </div>
+
+                        <h3 id="workoutCount"
+                            class="text-3xl font-black mt-4">
+                            12
+                        </h3>
+
+                        <p class="text-xs text-lime-400 mt-1">
+                            +3 this week
+                        </p>
+
+                    </div>
+
+
+                    <div class="glass rounded-2xl p-5">
+
+                        <div class="flex justify-between">
+
+                            <span class="text-gray-400">
+                                Calories
+                            </span>
+
+                            <span>
+                                🔥
+                            </span>
+
+                        </div>
+
+                        <h3 class="text-3xl font-black mt-4">
+                            4,820
+                        </h3>
+
+                        <p class="text-xs text-lime-400 mt-1">
+                            This week
+                        </p>
+
+                    </div>
+
+
+                    <div class="glass rounded-2xl p-5">
+
+                        <div class="flex justify-between">
+
+                            <span class="text-gray-400">
+                                Streak
+                            </span>
+
+                            <span>
+                                🔥
+                            </span>
+
+                        </div>
+
+                        <h3 id="streakCount"
+                            class="text-3xl font-black mt-4">
+                            7
+                        </h3>
+
+                        <p class="text-xs text-lime-400 mt-1">
+                            Days
+                        </p>
+
+                    </div>
+
+
+                    <div class="glass rounded-2xl p-5">
+
+                        <div class="flex justify-between">
+
+                            <span class="text-gray-400">
+                                Level
+                            </span>
+
+                            <span>
+                                🏆
+                            </span>
+
+                        </div>
+
+                        <h3 class="text-3xl font-black mt-4">
+                            14
+                        </h3>
+
+                        <p class="text-xs text-lime-400 mt-1">
+                            Fitness Level
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Main Grid -->
+
+                <div class="grid xl:grid-cols-3 gap-6">
+
+
+                    <!-- Today's Workout -->
+
+                    <div class="xl:col-span-2 glass rounded-3xl overflow-hidden">
+
+                        <div class="relative">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=1200&q=85"
+                                class="w-full h-72 object-cover">
+
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+
+
+                            <div class="absolute bottom-6 left-6">
+
+                                <span class="bg-lime-400 text-black px-3 py-1 rounded-full text-xs font-bold">
+                                    TODAY'S WORKOUT
+                                </span>
+
+                                <h2 class="text-3xl font-black mt-3">
+                                    Full Body Power
+                                </h2>
+
+                                <p class="text-gray-300 mt-2">
+                                    8 Exercises • 45 Minutes • Intermediate
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="p-6 flex flex-wrap gap-3">
+
+                            <button onclick="openWorkoutModal()"
+                                class="bg-lime-400 text-black px-6 py-3 rounded-xl font-bold">
+                                Start Workout →
+                            </button>
+
+                            <button onclick="showToast('Workout added to your plan')"
+                                class="border border-white/10 px-6 py-3 rounded-xl">
+                                + Add to Plan
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- Weekly Goal -->
+
+                    <div class="glass rounded-3xl p-6">
+
+                        <div class="flex justify-between">
+
+                            <div>
+
+                                <p class="text-gray-400 text-sm">
+                                    Weekly Goal
+                                </p>
+
+                                <h3 class="text-2xl font-bold mt-1">
+                                    4 / 5
+                                </h3>
+
+                            </div>
+
+                            <div class="text-3xl">
+                                🎯
+                            </div>
+
+                        </div>
+
+
+                        <div class="w-full bg-white/10 h-3 rounded-full mt-8">
+
+                            <div class="bg-lime-400 h-3 rounded-full"
+                                style="width:80%">
+                            </div>
+
+                        </div>
+
+
+                        <p class="text-gray-500 text-sm mt-4">
+                            One more workout to complete your weekly goal.
+                        </p>
+
+
+                        <button onclick="completeWorkout()"
+                            class="w-full bg-white/10 hover:bg-lime-400 hover:text-black py-3 rounded-xl mt-7 transition">
+
+                            Complete Workout
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Chart -->
+
+                <div class="glass rounded-3xl p-6 mt-6">
+
+                    <div class="flex justify-between items-center mb-6">
+
+                        <div>
+
+                            <p class="text-gray-400 text-sm">
+                                Performance
+                            </p>
+
+                            <h3 class="text-2xl font-bold">
+                                Weekly Activity
+                            </h3>
+
+                        </div>
+
+                        <select class="bg-black border border-white/10 rounded-xl px-4 py-2">
+
+                            <option>
+                                This Week
+                            </option>
+
+                            <option>
+                                Last Week
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="h-72">
+
+                        <canvas id="activityChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                             WORKOUT PAGE
+            ================================================== -->
+
+            <section id="page-workouts" class="page hidden">
+
+                <div class="mb-8">
+
+                    <p class="text-lime-400 uppercase tracking-[3px] text-sm font-bold">
+                        Training Library
+                    </p>
+
+                    <h1 class="text-4xl font-black mt-2">
+                        Explore Workouts
+                    </h1>
+
+                </div>
+
+
+                <!-- Search -->
+
+                <div class="flex flex-col md:flex-row gap-4 mb-8">
+
+                    <input id="workoutSearch"
+                        onkeyup="searchWorkouts()"
+                        placeholder="Search workouts..."
+                        class="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-4 outline-none focus:border-lime-400">
+
+
+                    <select id="workoutFilter"
+                        onchange="filterWorkouts()"
+                        class="bg-white/5 border border-white/10 rounded-xl px-5 py-4">
+
+                        <option value="all">
+                            All Categories
+                        </option>
+
+                        <option value="strength">
+                            Strength
+                        </option>
+
+                        <option value="cardio">
+                            Cardio
+                        </option>
+
+                        <option value="mobility">
+                            Mobility
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div id="workoutGrid"
+                    class="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+
+                    <!-- Cards -->
+
+                    <div class="workout-item glass rounded-3xl overflow-hidden"
+                        data-category="strength"
+                        data-name="muscle builder">
+
+                        <img src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=800&q=80"
+                            class="w-full h-56 object-cover">
+
+                        <div class="p-6">
+
+                            <span class="text-lime-400 text-xs font-bold">
+                                STRENGTH
+                            </span>
+
+                            <h3 class="text-2xl font-bold mt-2">
+                                Muscle Builder
+                            </h3>
+
+                            <p class="text-gray-400 mt-3">
+                                Build muscle with compound exercises.
+                            </p>
+
+                            <div class="flex justify-between text-sm text-gray-500 mt-5">
+
+                                <span>
+                                    45 min
+                                </span>
+
+                                <span>
+                                    🔥 420 kcal
+                                </span>
+
+                            </div>
+
+                            <button onclick="openWorkoutModal()"
+                                class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                                Start
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="workout-item glass rounded-3xl overflow-hidden"
+                        data-category="cardio"
+                        data-name="hiit blast">
+
+                        <img src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=800&q=80"
+                            class="w-full h-56 object-cover">
+
+                        <div class="p-6">
+
+                            <span class="text-lime-400 text-xs font-bold">
+                                CARDIO
+                            </span>
+
+                            <h3 class="text-2xl font-bold mt-2">
+                                HIIT Blast
+                            </h3>
+
+                            <p class="text-gray-400 mt-3">
+                                High intensity cardio workout.
+                            </p>
+
+                            <div class="flex justify-between text-sm text-gray-500 mt-5">
+
+                                <span>
+                                    30 min
+                                </span>
+
+                                <span>
+                                    🔥 350 kcal
+                                </span>
+
+                            </div>
+
+                            <button onclick="openWorkoutModal()"
+                                class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                                Start
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="workout-item glass rounded-3xl overflow-hidden"
+                        data-category="mobility"
+                        data-name="morning yoga">
+
+                        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=800&q=80"
+                            class="w-full h-56 object-cover">
+
+                        <div class="p-6">
+
+                            <span class="text-lime-400 text-xs font-bold">
+                                MOBILITY
+                            </span>
+
+                            <h3 class="text-2xl font-bold mt-2">
+                                Morning Yoga
+                            </h3>
+
+                            <p class="text-gray-400 mt-3">
+                                Improve flexibility and mobility.
+                            </p>
+
+                            <div class="flex justify-between text-sm text-gray-500 mt-5">
+
+                                <span>
+                                    25 min
+                                </span>
+
+                                <span>
+                                    🔥 150 kcal
+                                </span>
+
+                            </div>
+
+                            <button onclick="openWorkoutModal()"
+                                class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                                Start
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="workout-item glass rounded-3xl overflow-hidden"
+                        data-category="strength"
+                        data-name="upper body">
+
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80"
+                            class="w-full h-56 object-cover">
+
+                        <div class="p-6">
+
+                            <span class="text-lime-400 text-xs font-bold">
+                                STRENGTH
+                            </span>
+
+                            <h3 class="text-2xl font-bold mt-2">
+                                Upper Body
+                            </h3>
+
+                            <p class="text-gray-400 mt-3">
+                                Chest, shoulders, arms and back.
+                            </p>
+
+                            <div class="flex justify-between text-sm text-gray-500 mt-5">
+
+                                <span>
+                                    40 min
+                                </span>
+
+                                <span>
+                                    🔥 390 kcal
+                                </span>
+
+                            </div>
+
+                            <button onclick="openWorkoutModal()"
+                                class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                                Start
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="workout-item glass rounded-3xl overflow-hidden"
+                        data-category="cardio"
+                        data-name="fat burner">
+
+                        <img src="https://images.unsplash.com/photo-1552674605-db6ffd4facb5?auto=format&fit=crop&w=800&q=80"
+                            class="w-full h-56 object-cover">
+
+                        <div class="p-6">
+
+                            <span class="text-lime-400 text-xs font-bold">
+                                CARDIO
+                            </span>
+
+                            <h3 class="text-2xl font-bold mt-2">
+                                Fat Burner
+                            </h3>
+
+                            <p class="text-gray-400 mt-3">
+                                Fast paced calorie burning workout.
+                            </p>
+
+                            <div class="flex justify-between text-sm text-gray-500 mt-5">
+
+                                <span>
+                                    35 min
+                                </span>
+
+                                <span>
+                                    🔥 450 kcal
+                                </span>
+
+                            </div>
+
+                            <button onclick="openWorkoutModal()"
+                                class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                                Start
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="workout-item glass rounded-3xl overflow-hidden"
+                        data-category="strength"
+                        data-name="leg day">
+
+                        <img src="https://images.unsplash.com/photo-1434608519344-49d77a699ded?auto=format&fit=crop&w=800&q=80"
+                            class="w-full h-56 object-cover">
+
+                        <div class="p-6">
+
+                            <span class="text-lime-400 text-xs font-bold">
+                                STRENGTH
+                            </span>
+
+                            <h3 class="text-2xl font-bold mt-2">
+                                Leg Day
+                            </h3>
+
+                            <p class="text-gray-400 mt-3">
+                                Build powerful legs and lower body.
+                            </p>
+
+                            <div class="flex justify-between text-sm text-gray-500 mt-5">
+
+                                <span>
+                                    50 min
+                                </span>
+
+                                <span>
+                                    🔥 500 kcal
+                                </span>
+
+                            </div>
+
+                            <button onclick="openWorkoutModal()"
+                                class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                                Start
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                             PROGRESS PAGE
+            ================================================== -->
+
+            <section id="page-progress" class="page hidden">
+
+                <div class="mb-8">
+
+                    <p class="text-lime-400 uppercase tracking-[3px] text-sm font-bold">
+                        Analytics
+                    </p>
+
+                    <h1 class="text-4xl font-black mt-2">
+                        Your Progress
+                    </h1>
+
+                </div>
+
+
+                <div class="grid md:grid-cols-3 gap-5 mb-6">
+
+
+                    <div class="glass rounded-2xl p-6">
+
+                        <p class="text-gray-400">
+                            Current Weight
+                        </p>
+
+                        <h3 class="text-4xl font-black mt-3">
+                            72.4 kg
+                        </h3>
+
+                        <p class="text-lime-400 text-sm mt-2">
+                            ↓ 2.6 kg
+                        </p>
+
+                    </div>
+
+
+                    <div class="glass rounded-2xl p-6">
+
+                        <p class="text-gray-400">
+                            Total Workouts
+                        </p>
+
+                        <h3 id="progressWorkouts"
+                            class="text-4xl font-black mt-3">
+                            42
+                        </h3>
+
+                        <p class="text-lime-400 text-sm mt-2">
+                            +12 this month
+                        </p>
+
+                    </div>
+
+
+                    <div class="glass rounded-2xl p-6">
+
+                        <p class="text-gray-400">
+                            Avg. Calories
+                        </p>
+
+                        <h3 class="text-4xl font-black mt-3">
+                            420
+                        </h3>
+
+                        <p class="text-lime-400 text-sm mt-2">
+                            per workout
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="glass rounded-3xl p-6">
+
+                    <h3 class="text-2xl font-bold mb-6">
+                        Weight Progress
+                    </h3>
+
+                    <div class="h-80">
+
+                        <canvas id="weightChart"></canvas>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                             NUTRITION PAGE
+            ================================================== -->
+
+            <section id="page-nutrition" class="page hidden">
+
+                <div class="mb-8">
+
+                    <p class="text-lime-400 uppercase tracking-[3px] text-sm font-bold">
+                        Nutrition
+                    </p>
+
+                    <h1 class="text-4xl font-black mt-2">
+                        Fuel Your Body
+                    </h1>
+
+                </div>
+
+
+                <div class="grid lg:grid-cols-2 gap-6">
+
+
+                    <!-- Calories -->
+
+                    <div class="glass rounded-3xl p-7">
+
+                        <div class="flex justify-between">
+
+                            <div>
+
+                                <p class="text-gray-400">
+                                    Daily Calories
+                                </p>
+
+                                <h3 class="text-4xl font-black mt-2">
+                                    1,840
+                                </h3>
+
+                            </div>
+
+                            <span class="text-4xl">
+                                🔥
+                            </span>
+
+                        </div>
+
+
+                        <div class="w-full h-3 bg-white/10 rounded-full mt-7">
+
+                            <div class="h-3 bg-lime-400 rounded-full"
+                                style="width:72%">
+                            </div>
+
+                        </div>
+
+                        <p class="text-gray-500 text-sm mt-3">
+                            72% of your daily target
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- Water -->
+
+                    <div class="glass rounded-3xl p-7">
+
+                        <div class="flex justify-between">
+
+                            <div>
+
+                                <p class="text-gray-400">
+                                    Water Intake
+                                </p>
+
+                                <h3 id="waterCount"
+                                    class="text-4xl font-black mt-2">
+                                    4 / 8
+                                </h3>
+
+                            </div>
+
+                            <span class="text-4xl">
+                                💧
+                            </span>
+
+                        </div>
+
+
+                        <div class="flex gap-2 mt-7">
+
+                            <button onclick="addWater()"
+                                class="bg-blue-500/20 text-blue-400 px-4 py-2 rounded-xl">
+                                + Glass
+                            </button>
+
+                            <button onclick="resetWater()"
+                                class="bg-white/5 px-4 py-2 rounded-xl">
+                                Reset
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Meals -->
+
+                <div class="mt-6 glass rounded-3xl p-7">
+
+                    <div class="flex justify-between items-center">
+
+                        <h3 class="text-2xl font-bold">
+                            Today's Meals
+                        </h3>
+
+                        <button onclick="showToast('Meal added successfully')"
+                            class="bg-lime-400 text-black px-4 py-2 rounded-xl font-bold">
+                            + Add Meal
+                        </button>
+
+                    </div>
+
+
+                    <div class="grid md:grid-cols-3 gap-4 mt-7">
+
+
+                        <div class="bg-white/5 rounded-2xl p-5">
+
+                            <span class="text-2xl">
+                                🍳
+                            </span>
+
+                            <h4 class="font-bold mt-3">
+                                Breakfast
+                            </h4>
+
+                            <p class="text-gray-500 text-sm mt-1">
+                                Eggs + Oats
+                            </p>
+
+                            <p class="text-lime-400 mt-3">
+                                420 kcal
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-white/5 rounded-2xl p-5">
+
+                            <span class="text-2xl">
+                                🍗
+                            </span>
+
+                            <h4 class="font-bold mt-3">
+                                Lunch
+                            </h4>
+
+                            <p class="text-gray-500 text-sm mt-1">
+                                Rice + Chicken
+                            </p>
+
+                            <p class="text-lime-400 mt-3">
+                                620 kcal
+                            </p>
+
+                        </div>
+
+
+                        <div class="bg-white/5 rounded-2xl p-5">
+
+                            <span class="text-2xl">
+                                🥗
+                            </span>
+
+                            <h4 class="font-bold mt-3">
+                                Dinner
+                            </h4>
+
+                            <p class="text-gray-500 text-sm mt-1">
+                                Salad + Paneer
+                            </p>
+
+                            <p class="text-lime-400 mt-3">
+                                480 kcal
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                             TOOLS PAGE
+            ================================================== -->
+
+            <section id="page-tools" class="page hidden">
+
+                <div class="mb-8">
+
+                    <p class="text-lime-400 uppercase tracking-[3px] text-sm font-bold">
+                        Smart Tools
+                    </p>
+
+                    <h1 class="text-4xl font-black mt-2">
+                        Fitness Calculator
+                    </h1>
+
+                </div>
+
+
+                <div class="grid lg:grid-cols-2 gap-6">
+
+
+                    <!-- BMI -->
+
+                    <div class="glass rounded-3xl p-7">
+
+                        <h3 class="text-2xl font-bold">
+                            BMI Calculator
+                        </h3>
+
+                        <div class="grid sm:grid-cols-2 gap-4 mt-7">
+
+                            <input id="bmiWeight"
+                                type="number"
+                                placeholder="Weight (kg)"
+                                class="bg-black border border-white/10 rounded-xl px-4 py-3 outline-none">
+
+                            <input id="bmiHeight"
+                                type="number"
+                                placeholder="Height (cm)"
+                                class="bg-black border border-white/10 rounded-xl px-4 py-3 outline-none">
+
+                        </div>
+
+
+                        <button onclick="calculateBMI()"
+                            class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                            Calculate BMI
+                        </button>
+
+
+                        <div id="bmiResult"
+                            class="text-center mt-6 text-xl font-bold">
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- TDEE -->
+
+                    <div class="glass rounded-3xl p-7">
+
+                        <h3 class="text-2xl font-bold">
+                            Daily Calories
+                        </h3>
+
+                        <div class="grid sm:grid-cols-2 gap-4 mt-7">
+
+                            <input id="tdeeWeight"
+                                type="number"
+                                placeholder="Weight kg"
+                                class="bg-black border border-white/10 rounded-xl px-4 py-3 outline-none">
+
+                            <input id="tdeeHeight"
+                                type="number"
+                                placeholder="Height cm"
+                                class="bg-black border border-white/10 rounded-xl px-4 py-3 outline-none">
+
+                            <input id="tdeeAge"
+                                type="number"
+                                placeholder="Age"
+                                class="bg-black border border-white/10 rounded-xl px-4 py-3 outline-none">
+
+                            <select id="tdeeActivity"
+                                class="bg-black border border-white/10 rounded-xl px-4 py-3">
+
+                                <option value="1.2">
+                                    Low Activity
+                                </option>
+
+                                <option value="1.375">
+                                    Light Activity
+                                </option>
+
+                                <option value="1.55">
+                                    Moderate
+                                </option>
+
+                                <option value="1.725">
+                                    High Activity
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <button onclick="calculateTDEE()"
+                            class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+                            Calculate
+                        </button>
+
+
+                        <div id="tdeeResult"
+                            class="text-center mt-6 text-xl font-bold">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                         ACHIEVEMENTS
+            ================================================== -->
+
+            <section id="page-achievements" class="page hidden">
+
+                <div class="mb-8">
+
+                    <p class="text-lime-400 uppercase tracking-[3px] text-sm font-bold">
+                        Gamification
+                    </p>
+
+                    <h1 class="text-4xl font-black mt-2">
+                        Your Achievements
+                    </h1>
+
+                </div>
+
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+
+                    <div class="glass rounded-3xl p-7 text-center">
+
+                        <div class="text-6xl">
+                            🔥
+                        </div>
+
+                        <h3 class="font-bold text-xl mt-5">
+                            7 Day Streak
+                        </h3>
+
+                        <p class="text-gray-500 text-sm mt-2">
+                            Complete workouts for 7 days.
+                        </p>
+
+                        <span class="inline-block bg-lime-400/10 text-lime-400 px-3 py-1 rounded-full text-xs mt-5">
+                            UNLOCKED
+                        </span>
+
+                    </div>
+
+
+                    <div class="glass rounded-3xl p-7 text-center">
+
+                        <div class="text-6xl">
+                            💪
+                        </div>
+
+                        <h3 class="font-bold text-xl mt-5">
+                            First Workout
+                        </h3>
+
+                        <p class="text-gray-500 text-sm mt-2">
+                            Complete your first workout.
+                        </p>
+
+                        <span class="inline-block bg-lime-400/10 text-lime-400 px-3 py-1 rounded-full text-xs mt-5">
+                            UNLOCKED
+                        </span>
+
+                    </div>
+
+
+                    <div class="glass rounded-3xl p-7 text-center opacity-50">
+
+                        <div class="text-6xl">
+                            🏆
+                        </div>
+
+                        <h3 class="font-bold text-xl mt-5">
+                            50 Workouts
+                        </h3>
+
+                        <p class="text-gray-500 text-sm mt-2">
+                            Complete 50 workouts.
+                        </p>
+
+                        <span class="inline-block bg-white/10 text-gray-400 px-3 py-1 rounded-full text-xs mt-5">
+                            LOCKED
+                        </span>
+
+                    </div>
+
+
+                    <div class="glass rounded-3xl p-7 text-center opacity-50">
+
+                        <div class="text-6xl">
+                            ⚡
+                        </div>
+
+                        <h3 class="font-bold text-xl mt-5">
+                            30 Day Streak
+                        </h3>
+
+                        <p class="text-gray-500 text-sm mt-2">
+                            Train for 30 consecutive days.
+                        </p>
+
+                        <span class="inline-block bg-white/10 text-gray-400 px-3 py-1 rounded-full text-xs mt-5">
+                            LOCKED
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+                         MOBILE BOTTOM NAV
+    ====================================================== -->
+
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 mobile-nav">
+
+        <div class="grid grid-cols-5">
+
+            <button onclick="mobilePage('dashboard')" class="py-3 text-xs">
+                🏠
+                <span class="block mt-1">
+                    Home
+                </span>
+            </button>
+
+            <button onclick="mobilePage('workouts')" class="py-3 text-xs">
+                ⚡
+                <span class="block mt-1">
+                    Workout
+                </span>
+            </button>
+
+            <button onclick="mobilePage('progress')" class="py-3 text-xs">
+                📈
+                <span class="block mt-1">
+                    Progress
+                </span>
+            </button>
+
+            <button onclick="mobilePage('nutrition')" class="py-3 text-xs">
+                🥗
+                <span class="block mt-1">
+                    Food
+                </span>
+            </button>
+
+            <button onclick="mobilePage('tools')" class="py-3 text-xs">
+                🧮
+                <span class="block mt-1">
+                    Tools
+                </span>
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+                         WORKOUT MODAL
+    ====================================================== -->
+
+    <div id="workoutModal"
+        class="hidden fixed inset-0 bg-black/80 backdrop-blur-md z-[100] flex items-center justify-center p-5">
+
+        <div class="modal bg-[#111] border border-white/10 rounded-3xl w-full max-w-2xl p-7">
+
+            <div class="flex justify-between items-center">
+
+                <div>
+
+                    <p class="text-lime-400 text-sm font-bold">
+                        LIVE SESSION
+                    </p>
+
+                    <h2 class="text-3xl font-black mt-1">
+                        Full Body Power
+                    </h2>
+
+                </div>
+
+                <button onclick="closeWorkoutModal()"
+                    class="w-10 h-10 rounded-xl bg-white/5">
+                    ✕
+                </button>
+
+            </div>
+
+
+            <!-- Timer -->
+
+            <div class="text-center py-10">
+
+                <p class="text-gray-500">
+                    REST TIMER
+                </p>
+
+                <div id="restTimer"
+                    class="text-8xl font-black text-lime-400 mt-3">
+                    60
+                </div>
+
+
+                <div class="flex justify-center gap-3 mt-6">
+
+                    <button onclick="startRestTimer()"
+                        class="bg-lime-400 text-black px-6 py-3 rounded-xl font-bold">
+                        Start
+                    </button>
+
+                    <button onclick="resetRestTimer()"
+                        class="border border-white/10 px-6 py-3 rounded-xl">
+                        Reset
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- Exercise -->
+
+            <div class="bg-white/5 rounded-2xl p-5">
+
+                <div class="flex justify-between">
+
+                    <div>
+
+                        <p class="text-gray-500 text-sm">
+                            CURRENT EXERCISE
+                        </p>
+
+                        <h3 class="text-xl font-bold mt-1">
+                            Barbell Squat
+                        </h3>
+
+                    </div>
+
+                    <span class="text-lime-400">
+                        1 / 8
+                    </span>
+
+                </div>
+
+
+                <div class="grid grid-cols-3 gap-3 mt-5">
+
+                    <div>
+
+                        <label class="text-xs text-gray-500">
+                            Sets
+                        </label>
+
+                        <input type="number"
+                            value="3"
+                            class="w-full bg-black border border-white/10 rounded-xl px-3 py-3 mt-1">
+
+                    </div>
+
+
+                    <div>
+
+                        <label class="text-xs text-gray-500">
+                            Reps
+                        </label>
+
+                        <input type="number"
+                            value="10"
+                            class="w-full bg-black border border-white/10 rounded-xl px-3 py-3 mt-1">
+
+                    </div>
+
+
+                    <div>
+
+                        <label class="text-xs text-gray-500">
+                            Weight
+                        </label>
+
+                        <input type="number"
+                            value="40"
+                            class="w-full bg-black border border-white/10 rounded-xl px-3 py-3 mt-1">
+
+                    </div>
+
+                </div>
+
+
+                <button onclick="completeExercise()"
+                    class="w-full bg-lime-400 text-black py-3 rounded-xl mt-5 font-bold">
+
+                    Complete Exercise ✓
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+                         TOAST
+    ====================================================== -->
+
+    <div id="toast"
+        class="fixed right-5 bottom-24 lg:bottom-7 z-[200] hidden">
+
+        <div class="bg-lime-400 text-black px-6 py-4 rounded-xl font-bold shadow-2xl">
+            <span id="toastText">
+                Success
+            </span>
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+                         JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+
+        /* =================================================
+                         PAGE SYSTEM
+        ================================================= */
+
+        function showPage(page) {
+
+            document.querySelectorAll(".page").forEach(function(section) {
+
+                section.classList.add("hidden");
+
+            });
+
+
+            const selected =
+                document.getElementById("page-" + page);
+
+            if (selected) {
+
+                selected.classList.remove("hidden");
+
+            }
+
+
+            document.querySelectorAll(".sidebar-item").forEach(function(item) {
+
+                item.classList.remove("sidebar-active");
+
+            });
+
+
+            const nav =
+                document.getElementById("nav-" + page);
+
+            if (nav) {
+
+                nav.classList.add("sidebar-active");
+
+            }
+
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+
+
+
+        /* =================================================
+                         MOBILE PAGE
+        ================================================= */
+
+        function mobilePage(page) {
+
+            closeMobileMenu();
+
+            showPage(page);
+
+        }
+
+
+        function openMobileMenu() {
+
+            document
+                .getElementById("mobileMenu")
+                .classList.remove("hidden");
+
+        }
+
+
+        function closeMobileMenu() {
+
+            document
+                .getElementById("mobileMenu")
+                .classList.add("hidden");
+
+        }
+
+
+
+        /* =================================================
+                         TOAST
+        ================================================= */
+
+        let toastTimer;
+
+
+        function showToast(message) {
+
+            const toast =
+                document.getElementById("toast");
+
+            const text =
+                document.getElementById("toastText");
+
+
+            text.innerText = message;
+
+            toast.classList.remove("hidden");
+
+
+            clearTimeout(toastTimer);
+
+
+            toastTimer = setTimeout(function() {
+
+                toast.classList.add("hidden");
+
+            }, 2500);
+
+        }
+
+
+
+        /* =================================================
+                         WORKOUT SEARCH
+        ================================================= */
+
+        function searchWorkouts() {
+
+            const search =
+                document
+                    .getElementById("workoutSearch")
+                    .value
+                    .toLowerCase();
+
+
+            const cards =
+                document.querySelectorAll(".workout-item");
+
+
+            cards.forEach(function(card) {
+
+                const name =
+                    card
+                        .getAttribute("data-name")
+                        .toLowerCase();
+
+
+                if (name.includes(search)) {
+
+                    card.classList.remove("hidden");
+
+                } else {
+
+                    card.classList.add("hidden");
+
+                }
+
+            });
+
+        }
+
+
+
+        /* =================================================
+                         WORKOUT FILTER
+        ================================================= */
+
+        function filterWorkouts() {
+
+            const filter =
+                document
+                    .getElementById("workoutFilter")
+                    .value;
+
+
+            const cards =
+                document.querySelectorAll(".workout-item");
+
+
+            cards.forEach(function(card) {
+
+                const category =
+                    card.getAttribute("data-category");
+
+
+                if (
+                    filter === "all" ||
+                    category === filter
+                ) {
+
+                    card.classList.remove("hidden");
+
+                } else {
+
+                    card.classList.add("hidden");
+
+                }
+
+            });
+
+        }
+
+
+
+        /* =================================================
+                         BMI
+        ================================================= */
+
+        function calculateBMI() {
+
+            const weight =
+                Number(
+                    document.getElementById("bmiWeight").value
+                );
+
+
+            const height =
+                Number(
+                    document.getElementById("bmiHeight").value
+                );
+
+
+            if (!weight || !height) {
+
+                showToast("Enter height and weight");
+
+                return;
+
+            }
+
+
+            const heightMeter =
+                height / 100;
+
+
+            const bmi =
+                weight /
+                (heightMeter * heightMeter);
+
+
+            let status;
+
+
+            if (bmi < 18.5) {
+
+                status = "Underweight";
+
+            } else if (bmi < 25) {
+
+                status = "Normal";
+
+            } else if (bmi < 30) {
+
+                status = "Overweight";
+
+            } else {
+
+                status = "Obesity";
+
+            }
+
+
+            document
+                .getElementById("bmiResult")
+                .innerHTML =
+                `
+                BMI: <span class="text-lime-400">
+                    ${bmi.toFixed(1)}
+                </span>
+                <br>
+                <span class="text-gray-400 text-base">
+                    ${status}
+                </span>
+                `;
+
+        }
+
+
+
+        /* =================================================
+                         TDEE
+        ================================================= */
+
+        function calculateTDEE() {
+
+            const weight =
+                Number(
+                    document.getElementById("tdeeWeight").value
+                );
+
+
+            const height =
+                Number(
+                    document.getElementById("tdeeHeight").value
+                );
+
+
+            const age =
+                Number(
+                    document.getElementById("tdeeAge").value
+                );
+
+
+            const activity =
+                Number(
+                    document.getElementById("tdeeActivity").value
+                );
+
+
+            if (!weight || !height || !age) {
+
+                showToast("Enter all details");
+
+                return;
+
+            }
+
+
+            const bmr =
+                10 * weight +
+                6.25 * height -
+                5 * age +
+                5;
+
+
+            const tdee =
+                Math.round(bmr * activity);
+
+
+            document
+                .getElementById("tdeeResult")
+                .innerHTML =
+                `
+                ${tdee}
+                <span class="text-gray-400 text-base">
+                    kcal/day
+                </span>
+                `;
+
+        }
+
+
+
+        /* =================================================
+                         WATER TRACKER
+        ================================================= */
+
+        let water =
+            Number(localStorage.getItem("fitxWater")) || 4;
+
+
+        function updateWater() {
+
+            document
+                .getElementById("waterCount")
+                .innerText =
+                water + " / 8";
+
+        }
+
+
+        function addWater() {
+
+            if (water < 8) {
+
+                water++;
+
+                localStorage.setItem(
+                    "fitxWater",
+                    water
+                );
+
+                updateWater();
+
+                showToast("Water intake updated 💧");
+
+            }
+
+        }
+
+
+        function resetWater() {
+
+            water = 0;
+
+            localStorage.setItem(
+                "fitxWater",
+                water
+            );
+
+            updateWater();
+
+        }
+
+
+        updateWater();
+
+
+
+        /* =================================================
+                         WORKOUT PROGRESS
+        ================================================= */
+
+        let workoutCount =
+            Number(
+                localStorage.getItem("fitxWorkouts")
+            ) || 12;
+
+
+        function completeWorkout() {
+
+            workoutCount++;
+
+            localStorage.setItem(
+                "fitxWorkouts",
+                workoutCount
+            );
+
+
+            document
+                .getElementById("workoutCount")
+                .innerText =
+                workoutCount;
+
+
+            showToast(
+                "Workout completed! 💪"
+            );
+
+        }
+
+
+        document
+            .getElementById("workoutCount")
+            .innerText =
+            workoutCount;
+
+
+
+        /* =================================================
+                         WORKOUT MODAL
+        ================================================= */
+
+        function openWorkoutModal() {
+
+            document
+                .getElementById("workoutModal")
+                .classList.remove("hidden");
+
+        }
+
+
+        function closeWorkoutModal() {
+
+            document
+                .getElementById("workoutModal")
+                .classList.add("hidden");
+
+        }
+
+
+        function completeExercise() {
+
+            showToast(
+                "Exercise completed ✓"
+            );
+
+        }
+
+
+
+        /* =================================================
+                         REST TIMER
+        ================================================= */
+
+        let restTime = 60;
+
+        let restInterval = null;
+
+
+        function updateRestTimer() {
+
+            document
+                .getElementById("restTimer")
+                .innerText =
+                restTime;
+
+        }
+
+
+        function startRestTimer() {
+
+            if (restInterval) {
+                return;
+            }
+
+
+            restInterval =
+                setInterval(function() {
+
+                    if (restTime > 0) {
+
+                        restTime--;
+
+                        updateRestTimer();
+
+                    } else {
+
+                        clearInterval(restInterval);
+
+                        restInterval = null;
+
+                        showToast(
+                            "Rest complete! Get back to work 🔥"
+                        );
+
+                    }
+
+                }, 1000);
+
+        }
+
+
+        function resetRestTimer() {
+
+            clearInterval(restInterval);
+
+            restInterval = null;
+
+            restTime = 60;
+
+            updateRestTimer();
+
+        }
+
+
+
+        /* =================================================
+                         THEME
+        ================================================= */
+
+        let lightMode = false;
+
+
+        function toggleTheme() {
+
+            lightMode = !lightMode;
+
+
+            if (lightMode) {
+
+                document.body.classList.remove(
+                    "bg-[#070707]",
+                    "text-white"
+                );
+
+                document.body.classList.add(
+                    "bg-gray-100",
+                    "text-black"
+                );
+
+
+                showToast(
+                    "Light mode enabled"
+                );
+
+            } else {
+
+                document.body.classList.remove(
+                    "bg-gray-100",
+                    "text-black"
+                );
+
+                document.body.classList.add(
+                    "bg-[#070707]",
+                    "text-white"
+                );
+
+
+                showToast(
+                    "Dark mode enabled"
+                );
+
+            }
+
+        }
+
+
+
+        /* =================================================
+                         ACTIVITY CHART
+        ================================================= */
+
+        const activityCanvas =
+            document.getElementById("activityChart");
+
+
+        if (activityCanvas) {
+
+            new Chart(activityCanvas, {
+
+                type: "line",
+
+                data: {
+
+                    labels: [
+                        "Mon",
+                        "Tue",
+                        "Wed",
+                        "Thu",
+                        "Fri",
+                        "Sat",
+                        "Sun"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Calories",
+
+                            data: [
+                                320,
+                                450,
+                                280,
+                                520,
+                                430,
+                                600,
+                                480
+                            ],
+
+                            borderColor: "#a3e635",
+
+                            backgroundColor:
+                                "rgba(163,230,53,.08)",
+
+                            fill: true,
+
+                            tension: .4
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            grid: {
+                                display: false
+                            },
+
+                            ticks: {
+                                color: "#777"
+                            }
+
+                        },
+
+                        y: {
+
+                            grid: {
+                                color: "rgba(255,255,255,.05)"
+                            },
+
+                            ticks: {
+                                color: "#777"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+
+        /* =================================================
+                         WEIGHT CHART
+        ================================================= */
+
+        const weightCanvas =
+            document.getElementById("weightChart");
+
+
+        if (weightCanvas) {
+
+            new Chart(weightCanvas, {
+
+                type: "line",
+
+                data: {
+
+                    labels: [
+                        "Week 1",
+                        "Week 2",
+                        "Week 3",
+                        "Week 4",
+                        "Week 5",
+                        "Week 6"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Weight",
+
+                            data: [
+                                75,
+                                74.5,
+                                74,
+                                73.5,
+                                73,
+                                72.4
+                            ],
+
+                            borderColor: "#a3e635",
+
+                            tension: .4
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+
+                            ticks: {
+                                color: "#777"
+                            },
+
+                            grid: {
+                                display: false
+                            }
+
+                        },
+
+                        y: {
+
+                            ticks: {
+                                color: "#777"
+                            },
+
+                            grid: {
+                                color: "rgba(255,255,255,.05)"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+    </script>
+
 </body>
+
 </html>
+```
