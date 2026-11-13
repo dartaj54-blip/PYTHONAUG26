@@ -8,16 +8,14 @@
 # name = "soumya"
 
 # print("o" in name)
+#  score = 100
 
-# score = 100
+#  if score > 30 :
+#    print("pass")
+#  score = 30
 
-# if score > 30 :
-#     print("pass")
-# score = 30
-
-# if score ==30 :
+#  if score ==30 :
 #     print("just pass")
-#     elif score > 30
 
 # age =51
 
@@ -39,7 +37,7 @@ i = 5
 # while i >=1:
 #     print(i)
 #     i-=1
-i = 1
+# i = 1
 
 # while i <= 6:
 #     print(i)
@@ -49,6 +47,6 @@ i = 1
 #   if i %
 
 
-for i in range(1, 10):
-    if i==6:
+# for i in range(1, 10):
+#     if i==6:
 
