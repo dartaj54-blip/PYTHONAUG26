@@ -50,5 +50,5 @@ i = 1
 
 
 for i in range(1, 10):
-    if i==6:s
+    if i==6:
 
